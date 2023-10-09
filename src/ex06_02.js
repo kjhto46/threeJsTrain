@@ -47,29 +47,19 @@ export default function example() {
   scene.add(mesh);
 
   // 그리기
-  // (빠른 pc나 느린 pc의 시간 흐름을 통일 시키기 위해) 
-  // clock으로 시간의 흐름에 맞게 통일하는 작업
-  const clock = new THREE.Clock();
+  // 자바스크립트 내장 기능인 Date.now()를 사용하는 방법
+  let oldTime = Date.now();
 
   function draw() {
-    const time = clock.getElapsedTime();
+    const newTime = Date.now();
+    const deltaTime = newTime - oldTime;
+    oldTime = newTime;
 
-    /** THREE.MathUtils.degToRad() 
-     * THREE.js에서 지원해주는 함수
-     * deg값을 Radian 값으로 변경 즉 1이라고 입력하면 자동으로 1에 해당하는 라디안값 변경해서 배치 각도는 Radian을 사용
-     * 360도는 2파이를 사용 
-     * mesh.rotation.x += 0.1; // 라디안 값 이용
-     * 
-     * mesh.rotation.x += THREE.MathUtils.degToRad(2); 
-     * mesh.rotation.y += THREE.MathUtils.degToRad(1); 
-    */
-    mesh.rotation.x = 1 * time;
-    mesh.rotation.y = 3 * time;
-
-    mesh.position.y = time;
-    if(mesh.position.y > 3){
+    mesh.rotation.y += deltaTime * 0.003;
+    mesh.position.y += deltaTime * 0.001;
+    if(mesh.position.y > 3) {
       mesh.position.y = 0;
-    } 
+    }
 
     renderer.render(scene, camera);
 

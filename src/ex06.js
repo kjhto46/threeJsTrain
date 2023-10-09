@@ -52,7 +52,7 @@ export default function example() {
   const clock = new THREE.Clock();
 
   function draw() {
-    const time = clock.getElapsedTime();
+    const delta = clock.getDelta();
 
     /** THREE.MathUtils.degToRad() 
      * THREE.js에서 지원해주는 함수
@@ -63,10 +63,10 @@ export default function example() {
      * mesh.rotation.x += THREE.MathUtils.degToRad(2); 
      * mesh.rotation.y += THREE.MathUtils.degToRad(1); 
     */
-    mesh.rotation.x = 1 * time;
-    mesh.rotation.y = 3 * time;
+    mesh.rotation.x += 1 * delta;
+    mesh.rotation.y += 3 * delta;
 
-    mesh.position.y = time;
+    mesh.position.y += 0.7 * delta;
     if(mesh.position.y > 3){
       mesh.position.y = 0;
     } 
