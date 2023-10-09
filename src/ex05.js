@@ -30,6 +30,7 @@ export default function example() {
   light.position.y = 1;
   light.position.z = 3;
   scene.add(light);
+
   const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
   light2.position.x = -1;
   light2.position.y = -5;
@@ -57,9 +58,15 @@ export default function example() {
      * deg값을 Radian 값으로 변경 즉 1이라고 입력하면 자동으로 1에 해당하는 라디안값 변경해서 배치 */
     mesh.rotation.x += THREE.MathUtils.degToRad(1); 
     mesh.rotation.y += THREE.MathUtils.degToRad(1); 
+    mesh.position.y += 0.01;
+    if(mesh.position.y > 3){
+      mesh.position.y = 0;
+    } 
+
     renderer.render(scene, camera);
 
-    window.requestAnimationFrame(draw);
+    // window.requestAnimationFrame(draw);
+    renderer.setAnimationLoop(draw);
   }
 
   draw();
