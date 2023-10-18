@@ -9,7 +9,8 @@
 // import example from './ex07'; //그룹만들기 
 
 // Geometry 기본
-import example from './ex08'; // Geometry 기본
+// import example from './ex08'; // Geometry 기본
+import example from './ex09'; // Geometry 형태조작하기
 
 
 example();

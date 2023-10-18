@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// ----- 주제: Geometry 기본
+// ----- 주제: Geometry 정점(Vertex) position 이용하기
 
 export default function example() {
   // Renderer
@@ -23,7 +23,7 @@ export default function example() {
     0.1,
     1000
   );
-  camera.position.z = 4;
+  camera.position.z = 8;
   scene.add(camera);
 
   // Light
@@ -42,14 +42,23 @@ export default function example() {
   );
 
   // Mesh
-  const geometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16);
+  const geometry = new THREE.SphereGeometry(5, 64, 64);
   const material = new THREE.MeshStandardMaterial({
-    color: "hotpink",
-    side: THREE.DoubleSide, // 양면으로 그리는것인데 이는 mesh를 확대해 내부를 보게 될때 투명하게 보이는것방지, 방같은 느낌으로
-    wireframe: true, //뼈대만 확인가능한 와이어프레임 
-  });
+    color:'orangered',
+    side: THREE.DoubleSide,
+    flatShading: true //일부러 Low Polygon같은 효과를 만들때
+  })
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
+
+  const positionArray = geometry.attributes.position.array;
+  for (let i = 0; i < positionArray.length; i += 3 ) {
+    // 정점(Vertex) 한개의 x,y,z 좌표를 랜덤으로 조정
+    positionArray[i] = positionArray[i] + (Math.random() - 0.5) * 0.2;
+    positionArray[i + 1] = positionArray[i + 1] + (Math.random() - 0.5) * 0.2;
+    positionArray[i + 2] = positionArray[i + 2] + (Math.random() - 0.5) * 0.2;
+
+  }
 
   // 그리기
   const clock = new THREE.Clock();
