@@ -10,7 +10,10 @@
 
 // Geometry 기본
 // import example from './ex08'; // Geometry 기본
-import example from './ex09'; // Geometry 형태조작하기
+// import example from './ex09'; // Geometry 형태조작하기
+
+// 카메라
+import example from './ex10'; // OrbitControls
 
 
 example();
