@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 
-// ----- 주제: OrbitControls
+// ----- 주제: FlyControls 게임을 하듯 wasd로 컨트롤이 가능함. (드론나는것같은 뷰) qe, rf 키도 있음
 
 export default function example() {
 	// Renderer
@@ -36,18 +36,12 @@ export default function example() {
 	directionalLight.position.z = 2;
 	scene.add(directionalLight);
 
-	// Controls
-	const controls = new OrbitControls(camera, renderer.domElement);
-	controls.enableDamping = true;
-	// controls.enableZoom = false;
-	// controls.maxDistance = 10;
-	// controls.minDistance = 3;
-	// controls.minPolarAngle = Math.PI / 4; // 45도
-	// controls.minPolarAngle = THREE.MathUtils.degToRad(45);
-	// controls.maxPolarAngle = THREE.MathUtils.degToRad(135);
-	// controls.target.set(2, 2, 2);
-	// controls.autoRotate = true;
-	controls.autoRotateSpeed = 50;
+	// Controls !! 이부분 마우스를 따라 회전하는 것을 볼수있음.
+	const controls = new FlyControls(camera, renderer.domElement);
+	controls.rollSpeed = 0.05; // rollSpeed 기본 0.005 회전을 빠르게 함
+	// controls.movementSpeed = 3; // wasd의 이동속도를 컨트롤 하는 값 ) 기본값 1 
+	// controls.dragToLook = true; // 마우스 포인터에따라 회전하지 않고 드래그를 하고있는것에 따라 회전함
+
 
 
 	// Mesh
@@ -75,7 +69,7 @@ export default function example() {
 	function draw() {
 		const delta = clock.getDelta();
 
-		controls.update();
+		controls.update(delta); // 업데이트를 할때 delta값을 넣어줘야함.
 
 		renderer.render(scene, camera);
 		renderer.setAnimationLoop(draw);

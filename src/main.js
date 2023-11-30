@@ -13,7 +13,8 @@
 // import example from './ex09'; // Geometry 형태조작하기
 
 // 카메라
-import example from './ex10'; // OrbitControls
-
+// import example from './ex10'; // OrbitControls 오비컨트롤
+// import example from './ex/ex11'; // TrackballControls 트렉볼컨트롤 오비컨트롤과 다르게 수직으로도 360도 회전가능
+import example from './ex/ex12.js'; // FlyControls 게임을 하듯 wasd로 컨트롤이 가능함. (드론나는것같은 뷰) qe, rf 키도 있음
 
 example();
