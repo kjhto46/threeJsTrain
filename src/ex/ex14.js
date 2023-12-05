@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import dat from "dat.gui"
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
 
-// ----- 주제: position
+// ----- 주제: PointerLockControls
 
 export default function example() {
   // Renderer
@@ -36,41 +36,38 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
+  // Controls !! 이부분 작업
+  const controls = new PointerLockControls(camera, renderer.domElement)
+  // PointerLockControls을 사용하려면 controls.lock()을 지정해줘야하는데 이는 이렇게  지정할수가 없다.
+  // console.log(controls.domElement === renderer.domElement) 둘은 같은것이다.
+  controls.domElement.addEventListener("click", () => {
+    controls.lock()
+  }) // 클릭시 마우스 포인터가 사라지고 마우스 움직임을 따라 움직이는 화면을 만들게 된다.
+
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
-  const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
-  })
-  const mesh = new THREE.Mesh(geometry, material)
-  scene.add(mesh)
-
-  // AxesHelper
-  const axesHelper = new THREE.AxesHelper(3)
-  scene.add(axesHelper)
-
-  // Dat GUI
-  const gui = new dat.GUI()
-  gui.add(camera.position, "x", -5, 5, 0.1).name("카메라 X")
-  gui.add(camera.position, "y", -5, 5, 0.1).name("카메라 Y")
-  gui.add(camera.position, "z", 2, 10, 0.1).name("카메라 Z")
+  let mesh
+  let material
+  for (let i = 0; i < 20; i++) {
+    material = new THREE.MeshStandardMaterial({
+      color: `rgb(
+				${50 + Math.floor(Math.random() * 205)},
+				${50 + Math.floor(Math.random() * 205)},
+				${50 + Math.floor(Math.random() * 205)}
+			)`,
+    })
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.position.x = (Math.random() - 0.5) * 5
+    mesh.position.y = (Math.random() - 0.5) * 5
+    mesh.position.z = (Math.random() - 0.5) * 5
+    scene.add(mesh)
+  }
 
   // 그리기
   const clock = new THREE.Clock()
 
   function draw() {
     const delta = clock.getDelta()
-
-    // mesh.position.y = 2;
-    // 위와같이 일일히 지정 말고 한번에 지정하는 set
-    mesh.position.set(
-      -1, //x
-      0, //y
-      0 //z
-    )
-
-    // console.log( mesh.position.length() );
-    // console.log( mesh.position.distanceTo(new THREE.Vector3(1, 2, 0)) );
-    // console.log( mesh.position.distanceTo(camera.position) );
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)

@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import dat from "dat.gui"
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls"
 
-// ----- 주제: position
+// ----- 주제: FirstPersonControls, FlyControls 대체제임, 몇가지 기능을 수정 추가한 것이라 생각해도 좋음
 
 export default function example() {
   // Renderer
@@ -36,23 +36,31 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
+  // Controls !! 이부분 작업
+  const controls = new FirstPersonControls(camera, renderer.domElement)
+  // controls.movementSpeed = 10 // wasd가 더 빨리 움직여지는거
+  // controls.activeLook = false // 마우스로 주변을 움직여도 고정
+  // controls.lookSpeed = 0.1 // FlyControls 에서는 rollSpeed였죠? 여기는 lookSpeed
+  // controls.autoForward =true // 저절로 앞으로 가는 모션
+
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
-  const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
-  })
-  const mesh = new THREE.Mesh(geometry, material)
-  scene.add(mesh)
-
-  // AxesHelper
-  const axesHelper = new THREE.AxesHelper(3)
-  scene.add(axesHelper)
-
-  // Dat GUI
-  const gui = new dat.GUI()
-  gui.add(camera.position, "x", -5, 5, 0.1).name("카메라 X")
-  gui.add(camera.position, "y", -5, 5, 0.1).name("카메라 Y")
-  gui.add(camera.position, "z", 2, 10, 0.1).name("카메라 Z")
+  let mesh
+  let material
+  for (let i = 0; i < 20; i++) {
+    material = new THREE.MeshStandardMaterial({
+      color: `rgb(
+				${50 + Math.floor(Math.random() * 205)},
+				${50 + Math.floor(Math.random() * 205)},
+				${50 + Math.floor(Math.random() * 205)}
+			)`,
+    })
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.position.x = (Math.random() - 0.5) * 5
+    mesh.position.y = (Math.random() - 0.5) * 5
+    mesh.position.z = (Math.random() - 0.5) * 5
+    scene.add(mesh)
+  }
 
   // 그리기
   const clock = new THREE.Clock()
@@ -60,17 +68,7 @@ export default function example() {
   function draw() {
     const delta = clock.getDelta()
 
-    // mesh.position.y = 2;
-    // 위와같이 일일히 지정 말고 한번에 지정하는 set
-    mesh.position.set(
-      -1, //x
-      0, //y
-      0 //z
-    )
-
-    // console.log( mesh.position.length() );
-    // console.log( mesh.position.distanceTo(new THREE.Vector3(1, 2, 0)) );
-    // console.log( mesh.position.distanceTo(camera.position) );
+    controls.update(delta) // FlyControls와 동일하게 업데이트를 할때 delta값을 넣어줘야함.
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
