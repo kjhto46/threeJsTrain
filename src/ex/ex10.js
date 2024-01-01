@@ -37,6 +37,7 @@ export default function example() {
   scene.add(directionalLight)
 
   // Controls
+  // OrbitControls은 카메라가 오브젝트를 보고 있는 (look at) 하는 상황이라 높이 지정이 달라도 정중앙으로 위치함
   const controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
   // controls.enableZoom = false;

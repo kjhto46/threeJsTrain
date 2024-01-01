@@ -1,7 +1,8 @@
 import * as THREE from "three"
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
+import { KeyController } from "./KeyController"
 
-// ----- 주제: PointerLockControls 클릭시 화면이 락이 되면서 ESC로 나오는 컨트롤
+// ----- 주제: PointerLockControls에서 WASD로 이동할수 있는 기능 (1인칭 게임처럼)
 
 export default function example() {
   // Renderer
@@ -36,13 +37,37 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
-  // Controls !! 이부분 작업
+  // Controls
   const controls = new PointerLockControls(camera, renderer.domElement)
-  // PointerLockControls을 사용하려면 controls.lock()을 지정해줘야하는데 이는 이렇게  지정할수가 없다.
-  // console.log(controls.domElement === renderer.domElement) 둘은 같은것이다.
+
   controls.domElement.addEventListener("click", () => {
     controls.lock()
-  }) // 클릭시 마우스 포인터가 사라지고 마우스 움직임을 따라 움직이는 화면을 만들게 된다.
+  })
+
+  controls.addEventListener("lock", () => {
+    console.log("lock!")
+  })
+  controls.addEventListener("unlock", () => {
+    console.log("unlock!")
+  })
+
+  // 키보드 컨트롤
+  const keyController = new KeyController()
+
+  function walk() {
+    if (keyController.keys["KeyW"] || keyController.keys["ArrowUp"]) {
+      controls.moveForward(0.02)
+    }
+    if (keyController.keys["KeyS"] || keyController.keys["ArrowDown"]) {
+      controls.moveForward(-0.02)
+    }
+    if (keyController.keys["KeyA"] || keyController.keys["ArrowLeft"]) {
+      controls.moveRight(-0.02)
+    }
+    if (keyController.keys["KeyD"] || keyController.keys["ArrowRight"]) {
+      controls.moveRight(0.02)
+    }
+  }
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -67,6 +92,11 @@ export default function example() {
   const clock = new THREE.Clock()
 
   function draw() {
+    const delta = clock.getDelta()
+
+    // 계속 그리기로 키 눌리는 값을 감시해야함
+    walk()
+
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
   }

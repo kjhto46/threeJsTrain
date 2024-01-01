@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
+import { DragControls } from "three/examples/jsm/controls/DragControls"
 
-// ----- 주제: PointerLockControls 클릭시 화면이 락이 되면서 ESC로 나오는 컨트롤
+// ----- 주제: DragControls 드레그 하면서 이동시킬수있는 컨트롤 기능
 
 export default function example() {
   // Renderer
@@ -36,16 +36,9 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
-  // Controls !! 이부분 작업
-  const controls = new PointerLockControls(camera, renderer.domElement)
-  // PointerLockControls을 사용하려면 controls.lock()을 지정해줘야하는데 이는 이렇게  지정할수가 없다.
-  // console.log(controls.domElement === renderer.domElement) 둘은 같은것이다.
-  controls.domElement.addEventListener("click", () => {
-    controls.lock()
-  }) // 클릭시 마우스 포인터가 사라지고 마우스 움직임을 따라 움직이는 화면을 만들게 된다.
-
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
+  const meshes = []
   let mesh
   let material
   for (let i = 0; i < 20; i++) {
@@ -60,8 +53,27 @@ export default function example() {
     mesh.position.x = (Math.random() - 0.5) * 5
     mesh.position.y = (Math.random() - 0.5) * 5
     mesh.position.z = (Math.random() - 0.5) * 5
+    mesh.name = `box-${i}` // 박스 네임 추가
     scene.add(mesh)
+
+    meshes.push(mesh)
   }
+
+  // Controls !! 이부분 작업
+  // DragControls은 안에 들어가는 인자값이 다름.
+  /**
+   * DragControls
+   * 드래그할 메쉬들 지정 (이는 배열로 지정해줘도 됨)
+   * 카메라,
+   * 돔 엘리먼트
+   * meshes (드래그할 메쉬들)이 생긴 이후 작성해야 에러가 안생김
+   */
+  const controls = new DragControls(meshes, camera, renderer.domElement)
+
+  // DragControls에도 드래그 한 값이 필요할 수가 있음. 여기엔 addEventListener의 dragstart를 사용할수있음
+  controls.addEventListener("dragstart", (e) => {
+    console.log(e.object.name)
+  })
 
   // 그리기
   const clock = new THREE.Clock()
